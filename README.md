@@ -1,6 +1,6 @@
-# ansible in a container
+# Run ansible in a container
 
-Instead of installing `ansible` you might want to run it in a container, using an alias:
+Instead of installing `ansible` you might want to run it in ephemeral docker containers, using aliases:
 
 ```bash
 alias ansible='docker run --rm -it -v $(pwd):/etc/ansible -v ~/.ssh:/root/.ssh simplificator/ansible ansible'
