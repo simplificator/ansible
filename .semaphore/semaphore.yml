@@ -64,8 +64,8 @@ blocks:
             --file $DISTRIBUTION_VERSION/Dockerfile
             --progress=plain
             --tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DISTRIBUTION_VERSION
-          - docker run $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG bash -c "git clone --branch $SEMAPHORE_GIT_BRANCH https://github.com/simplificator/ansible.git && cd ansible && bash test/basic-test.sh"
-
+          - docker run $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG bash -c "git clone --branch $SEMAPHORE_GIT_BRANCH https://github.com/simplificator/ansible.git && cd ansible && bash test/basic-test.sh && ansible-playbook test/test-playbook.yml --connection=local"
+  
   - name: "Tag Docker images correctly if master"
     dependencies:
       - "Build, Test and Push Alpine image"
