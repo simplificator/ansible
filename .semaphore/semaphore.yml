@@ -1,0 +1,101 @@
+version: v1.0
+name: Simplificator Ansible Docker Images
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Build and Push Alpine image"
+    dependencies: []
+    task:
+      prologue: &prologue
+        commands:
+          - checkout
+          - echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+          - CI_COMMIT_REF_SLUG=$(bash scripts/quick-slugify.sh $SEMAPHORE_GIT_BRANCH)
+          - export CI_COMMIT_REF_SLUG
+      epilogue: &epilogue
+        on_pass:
+          commands:
+            - docker push $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
+      env_vars:
+        - name: DOCKER_REPOSITORY
+          value: simplificator/ansible
+        - name: DOCKER_BUILDKIT
+          value: "1"
+        - name: DISTRIBUTION_VERSION
+          value: 'alpine3'
+      secrets: &secrets
+        - name: simplificator-ansible
+      jobs:
+      - name: Build and Push Image
+        commands:
+          - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
+          - docker build
+            --build-arg BUILDKIT_INLINE_CACHE=1
+            --cache-from $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
+            --file $DISTRIBUTION_VERSION/Dockerfile
+            --progress=plain
+            --tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DISTRIBUTION_VERSION
+
+  - name: "Build and Push Debian-based images"
+    dependencies: []
+    task:
+      prologue: *prologue
+      epilogue: *epilogue
+      env_vars: &minimal_env_vars
+        - name: DOCKER_REPOSITORY
+          value: simplificator/ansible
+        - name: DOCKER_BUILDKIT
+          value: "1"
+      secrets: *secrets
+      jobs:
+      - name: Build and Push Image
+        matrix:
+          - env_var: DISTRIBUTION_VERSION
+            values: ["debian8", "debian9", "debian10", "ubuntu1804" ]
+        commands:
+          - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
+          - docker build
+            --build-arg BUILDKIT_INLINE_CACHE=1
+            --cache-from $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
+            --file $DISTRIBUTION_VERSION/Dockerfile
+            --progress=plain
+            --tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DISTRIBUTION_VERSION
+
+  - name: "Tag Docker images correctly if master"
+    dependencies:
+      - "Build and Push Alpine image"
+      - "Build and Push Debian-based images"
+    run:
+      when: "branch = 'master'"
+    task:
+      prologue: *prologue
+      env_vars: *minimal_env_vars
+      secrets: *secrets
+      jobs:
+        - name: Tag master image as stable
+          matrix:
+            - env_var: DISTRIBUTION_VERSION
+              values: ["debian8", "debian9", "debian10", "ubuntu1804", "alpine3" ]
+          commands:
+            - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
+            - docker image tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION
+            - docker push $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION
+
+  - name: "Tag alpine image as latest if master"
+    dependencies:
+      - "Build and Push Alpine image"
+    run:
+      when: "branch = 'master'"
+    task:
+      prologue: *prologue
+      env_vars: *minimal_env_vars
+      secrets: *secrets
+      jobs:
+        - name: Tag alpine image as latest
+          commands:
+            - docker pull $DOCKER_REPOSITORY:alpine3-$CI_COMMIT_REF_SLUG
+            - docker image tag $DOCKER_REPOSITORY:alpine3-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:latest
+            - docker push $DOCKER_REPOSITORY:latest
