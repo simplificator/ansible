@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+printf "\nChecking that SSH is available\n"
+if [[ $(command -v ssh) ]]; then
+    echo "SSH command is available"
+else
+    echo "SSH command not found"
+    exit 1
+fi
+
 printf "\nChecking Python version\n"
 python -v 2> /dev/null || python3 -v 2> /dev/null || exit 1
 
