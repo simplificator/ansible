@@ -5,7 +5,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     apt-get update -y  &&  apt-get install --fix-missing          && \
     DEBIAN_FRONTEND=noninteractive         \
     apt-get install -y python3 python3-pip python3-dev \
-    curl gcc git libffi-dev libssl-dev libapt-pkg-dev git ssh && \
+    curl gcc git libffi-dev libssl-dev libapt-pkg-dev git ssh gnupg && \
     pip3 install --upgrade pycrypto cffi && \
     \
     echo "===> Installing Ansible..."   && \
