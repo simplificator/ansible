@@ -6,7 +6,7 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build and Push Alpine image"
+  - name: "Build, Test and Push Alpine image"
     dependencies: []
     task:
       prologue: &prologue
@@ -29,7 +29,7 @@ blocks:
       secrets: &secrets
         - name: simplificator-ansible
       jobs:
-      - name: Build and Push Image
+      - name: Build, Test and Push Image
         commands:
           - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
           - docker build
@@ -38,8 +38,9 @@ blocks:
             --file $DISTRIBUTION_VERSION/Dockerfile
             --progress=plain
             --tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DISTRIBUTION_VERSION
+          - docker run $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG bash -c "git clone --branch $SEMAPHORE_GIT_BRANCH https://github.com/simplificator/ansible.git && cd ansible && bash test/basic-test.sh"
 
-  - name: "Build and Push Debian-based images"
+  - name: "Build, Test and Push Debian-based images"
     dependencies: []
     task:
       prologue: *prologue
@@ -51,7 +52,7 @@ blocks:
           value: "1"
       secrets: *secrets
       jobs:
-      - name: Build and Push Image
+      - name: Build, Test and Push Image
         matrix:
           - env_var: DISTRIBUTION_VERSION
             values: ["debian8", "debian9", "debian10", "ubuntu1804" ]
@@ -63,11 +64,12 @@ blocks:
             --file $DISTRIBUTION_VERSION/Dockerfile
             --progress=plain
             --tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DISTRIBUTION_VERSION
+          - docker run $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG bash -c "git clone --branch $SEMAPHORE_GIT_BRANCH https://github.com/simplificator/ansible.git && cd ansible && bash test/basic-test.sh"
 
   - name: "Tag Docker images correctly if master"
     dependencies:
-      - "Build and Push Alpine image"
-      - "Build and Push Debian-based images"
+      - "Build, Test and Push Alpine image"
+      - "Build, Test and Push Debian-based images"
     run:
       when: "branch = 'master'"
     task:
@@ -86,7 +88,7 @@ blocks:
 
   - name: "Tag alpine image as latest if master"
     dependencies:
-      - "Build and Push Alpine image"
+      - "Build, Test and Push Alpine image"
     run:
       when: "branch = 'master'"
     task:
