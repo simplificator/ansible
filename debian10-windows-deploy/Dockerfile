@@ -5,14 +5,13 @@ FROM debian:buster
 RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     apt-get update -y  &&  apt-get install --fix-missing          && \
     DEBIAN_FRONTEND=noninteractive         \
-    apt-get install -y python3 python3-pip python3-dev python3-apt \
-    curl gcc git libffi-dev libssl-dev libapt-pkg-dev git ssh gnupg && \
+    apt-get install -y python3 python3-pip python3-dev \
+    gcc git libffi-dev libssl-dev ssh && \
     pip3 install --upgrade pycrypto cffi && \
     \
-    echo "===> Installing Ansible..."   && \
+    echo "===> Installing Ansible & PyWinRM..."   && \
     pip3 install ansible=='2.9.3' && \
-    pip3 install pywinrm=='0.4.1' && \
-    pip3 install pywinrm[credssp] && \
+    pip3 install pywinrm[credssp]=='0.4.1' && \
     \
     echo "===> Removing unused APT resources..."                  && \
     apt-get -f -y --auto-remove remove \

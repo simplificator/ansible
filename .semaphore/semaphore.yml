@@ -6,7 +6,7 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build, Test and Push Alpine image"
+  - name: "Build, Test and Push minimal images"
     dependencies: []
     task:
       prologue: &prologue
@@ -24,12 +24,13 @@ blocks:
           value: simplificator/ansible
         - name: DOCKER_BUILDKIT
           value: "1"
-        - name: DISTRIBUTION_VERSION
-          value: 'alpine3'
       secrets: &secrets
         - name: simplificator-ansible
       jobs:
       - name: Build, Test and Push Image
+        matrix:
+          - env_var: DISTRIBUTION_VERSION
+            values: ["alpine3", "debian10-windows-deploy" ]
         commands:
           - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
           - docker build
@@ -55,7 +56,7 @@ blocks:
       - name: Build, Test and Push Image
         matrix:
           - env_var: DISTRIBUTION_VERSION
-            values: ["debian8", "debian9", "debian10", "debian10-windows-deps", "ubuntu1804" ]
+            values: ["debian8", "debian9", "debian10", "ubuntu1804" ]
         commands:
           - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
           - docker build
@@ -68,7 +69,7 @@ blocks:
   
   - name: "Tag Docker images correctly if master"
     dependencies:
-      - "Build, Test and Push Alpine image"
+      - "Build, Test and Push minimal images"
       - "Build, Test and Push Debian-based images"
     run:
       when: "branch = 'master'"
@@ -80,7 +81,7 @@ blocks:
         - name: Tag master image as stable
           matrix:
             - env_var: DISTRIBUTION_VERSION
-              values: ["debian8", "debian9", "debian10", "debian10-windows-deps", "ubuntu1804", "alpine3" ]
+              values: ["debian8", "debian9", "debian10", "debian10-windows-deploy", "ubuntu1804", "alpine3" ]
           commands:
             - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
             - docker image tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION
@@ -88,7 +89,7 @@ blocks:
 
   - name: "Tag alpine image as latest if master"
     dependencies:
-      - "Build, Test and Push Alpine image"
+      - "Build, Test and Push minimal images"
     run:
       when: "branch = 'master'"
     task:
@@ -101,3 +102,19 @@ blocks:
             - docker pull $DOCKER_REPOSITORY:alpine3-$CI_COMMIT_REF_SLUG
             - docker image tag $DOCKER_REPOSITORY:alpine3-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:latest
             - docker push $DOCKER_REPOSITORY:latest
+
+  - name: "Tag debian10-windows-deploy as windows-deploy if master"
+    dependencies:
+      - "Build, Test and Push minimal images"
+    run:
+      when: "branch = 'master'"
+    task:
+      prologue: *prologue
+      env_vars: *minimal_env_vars
+      secrets: *secrets
+      jobs:
+        - name: Tag debian10 windows deploy image as windows-deploy
+          commands:
+            - docker pull $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG
+            - docker image tag $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:latest
+            - docker push $DOCKER_REPOSITORY:windows-deploy
