@@ -116,5 +116,5 @@ blocks:
         - name: Tag debian10 windows deploy image as windows-deploy
           commands:
             - docker pull $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG
-            - docker image tag $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:latest
+            - docker image tag $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:windows-deploy
             - docker push $DOCKER_REPOSITORY:windows-deploy
