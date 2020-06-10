@@ -56,7 +56,7 @@ blocks:
       - name: Build, Test and Push Image
         matrix:
           - env_var: DISTRIBUTION_VERSION
-            values: ["debian8", "debian9", "debian10", "ubuntu1804" ]
+            values: ["debian8", "debian9", "debian10", "ubuntu1804", "ubuntu2004" ]
         commands:
           - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
           - docker build
@@ -81,7 +81,7 @@ blocks:
         - name: Tag master image as stable
           matrix:
             - env_var: DISTRIBUTION_VERSION
-              values: ["debian8", "debian9", "debian10", "debian10-windows-deploy", "ubuntu1804", "alpine3" ]
+              values: ["debian8", "debian9", "debian10", "debian10-windows-deploy", "ubuntu1804", "ubuntu2004", "alpine3" ]
           commands:
             - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
             - docker image tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION
