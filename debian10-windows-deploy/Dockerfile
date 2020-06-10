@@ -10,7 +10,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     pip3 install --upgrade pycrypto cffi jmespath && \
     \
     echo "===> Installing Ansible & PyWinRM..."   && \
-    pip3 install ansible=='2.9.3' && \
+    pip3 install ansible=='2.9.9' && \
     pip3 install pywinrm[credssp]=='0.4.1' && \
     \
     echo "===> Removing unused APT resources..."                  && \
