@@ -6,7 +6,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     DEBIAN_FRONTEND=noninteractive         \
     apt-get install -y python3 python3-pip python3-dev python3-apt \
     curl gcc git libffi-dev libssl-dev libapt-pkg-dev git ssh gnupg && \
-    pip3 install --upgrade pycrypto cffi && \
+    pip3 install --upgrade pycrypto cffi jmespath && \
     \
     echo "===> Installing Ansible..."   && \
     pip3 install ansible=='2.9.3' && \
