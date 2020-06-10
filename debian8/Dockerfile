@@ -9,7 +9,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     pip install --upgrade pycrypto cffi jmespath && \
     \
     echo "===> Installing Ansible..."   && \
-    pip install ansible=='2.9.3' && \
+    pip install ansible=='2.9.9' && \
     \
     echo "===> Removing unused APT resources..."                  && \
     apt-get -f -y --auto-remove remove \

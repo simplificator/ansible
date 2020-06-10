@@ -7,7 +7,7 @@ RUN echo "===> Adding Ansible dependencies..."  && \
     pip install --upgrade pip pycrypto cffi jmespath && \
     \
     echo "===> Installing Ansible..."  && \
-    pip install ansible=='2.9.3' && \
+    pip install ansible=='2.9.9' && \
     \
     echo "===> Removing package list..."  && \
     apk del build-dependencies libffi-dev openssl-dev build-base && \
