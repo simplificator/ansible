@@ -4,7 +4,7 @@ FROM python:3.8-alpine
 RUN echo "===> Adding Ansible dependencies..."  && \
 	apk --update add git bash openssh && \
     apk --update add --virtual build-dependencies libffi-dev openssl-dev build-base && \
-    pip install --upgrade pip pycrypto cffi && \
+    pip install --upgrade pip pycrypto cffi jmespath && \
     \
     echo "===> Installing Ansible..."  && \
     pip install ansible=='2.9.3' && \
