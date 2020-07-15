@@ -3,14 +3,18 @@ FROM python:3.8-alpine
 
 RUN echo "===> Adding Ansible dependencies..."  && \
 	apk --update add git bash openssh && \
-    apk --update add --virtual build-dependencies libffi-dev openssl-dev build-base && \
-    pip install --upgrade pip pycrypto cffi jmespath && \
+    apk --update add --virtual build-dependencies libffi-dev openssl-dev build-base wget && \
+    pip install --upgrade pip pycrypto cffi jmespath nodeping-api && \
     \
     echo "===> Installing Ansible..."  && \
     pip install ansible=='2.9.9' && \
     \
+    echo "===> Installing Nodeping module ..."  && \
+    mkdir -p ~/.ansible/plugins/modules/ && \
+    wget -P ~/.ansible/plugins/modules https://raw.githubusercontent.com/NodePing/nodeping-ansible/master/nodeping.py &&  \
+    \
     echo "===> Removing package list..."  && \
-    apk del build-dependencies libffi-dev openssl-dev build-base && \
+    apk del build-dependencies libffi-dev openssl-dev build-base wget && \
     rm -rf /var/cache/apk/*               && \
     \
     echo "===> Adding hosts for convenience..."  && \
