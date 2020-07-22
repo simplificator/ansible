@@ -13,7 +13,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     \
     echo "===> Installing Nodeping module ..."  && \
     mkdir -p ~/.ansible/plugins/modules/ && \
-    wget -P ~/.ansible/plugins/modules https://raw.githubusercontent.com/NodePing/nodeping-ansible/master/nodeping.py &&  \
+    wget -P ~/.ansible/plugins/modules https://raw.githubusercontent.com/NodePing/nodeping-ansible/ad1cefa077e6c7c18dc5bdaaa12e51e9584febb1/nodeping.py &&  \
     \
     echo "===> Removing unused APT resources..."                  && \
     apt-get -f -y --auto-remove remove \
