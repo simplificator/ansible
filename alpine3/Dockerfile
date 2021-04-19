@@ -1,5 +1,5 @@
 # SOURCE: https://github.com/William-Yeh/docker-ansible/blob/master/alpine3-onbuild/Dockerfile
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 
 ARG ANSIBLE_VERSION
 
