@@ -1,6 +1,8 @@
 # SOURCE: https://github.com/William-Yeh/docker-ansible/blob/master/ubuntu18.04-onbuild/Dockerfile
 FROM ubuntu:20.04
 
+ARG ANSIBLE_VERSION
+
 RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     apt-get update -y  &&  apt-get install --fix-missing          && \
     DEBIAN_FRONTEND=noninteractive         \
@@ -9,7 +11,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     pip3 install --upgrade pycrypto cffi jmespath nodeping-api && \
     \
     echo "===> Installing Ansible..."   && \
-    pip3 install ansible=='2.9.9' && \
+    pip3 install ansible==$ANSIBLE_VERSION && \
     \
     echo "===> Installing Nodeping module ..."  && \
     mkdir -p ~/.ansible/plugins/modules/ && \
