@@ -21,9 +21,7 @@ RUN ansible-playbook install-some-software.yml --connection=local --extra-vars "
 Now you could built this Docker file with docker build. If something is wrong with your role, the build will fail.
 
 ## Debian 8
-The latest version of Python 3 on Debian 8 is Python 3.4. Ansible requires Python 3.5 at least, which is not available in the debian repository, so you have to build Python manually. This causes issues, because Ansible relies on an apt package called "python-apt" for package installation, which has to be built manually as well.
-
-Afterall, the purpose behind the Debian-based images is to provide Docker images for testing Ansible roles against a mostly real-world scenario. So if Debian 8 isn't able to run Python 3.5 per default, we shouldn't force it. On the other hand, Debian 8 will be unsupported in after the 30th of June, 2020, which is in the near future.
+We don't support Debian 8 anymore. However, if you need it, there is a tag available named [debian8-2-9](https://hub.docker.com/layers/simplificator/ansible/debian8-2-9/images/sha256-ab5b6bd593163e91e2500d4850e894b7016277c45c4669c0274a566b8f59d9bc?context=repo) which doesn't receive any updates.
 
 ## Run ansible in a container
 
