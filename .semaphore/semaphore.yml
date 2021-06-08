@@ -35,7 +35,7 @@ blocks:
           - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
           - docker build
             --build-arg BUILDKIT_INLINE_CACHE=1
-            --build-arg ANSIBLE_VERSION=2.9.20
+            --build-arg ANSIBLE_VERSION=2.10.7
             --cache-from $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
             --file $DISTRIBUTION_VERSION/Dockerfile
             --progress=plain
