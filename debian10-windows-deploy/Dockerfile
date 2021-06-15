@@ -8,7 +8,7 @@ RUN echo "===> Installing dev libraries and supporting tools ..."  && \
     apt-get update -y  &&  apt-get install --fix-missing          && \
     DEBIAN_FRONTEND=noninteractive         \
     apt-get install -y python3 python3-pip python3-dev \
-    gcc git libffi-dev libssl-dev ssh wget && \
+    gcc git libffi-dev libssl-dev openssh-client wget && \
     pip3 install --upgrade pycrypto cffi jmespath nodeping-api && \
     \
     echo "===> Installing Ansible & PyWinRM..."   && \
