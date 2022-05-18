@@ -1,6 +1,6 @@
 
 # SOURCE: https://github.com/William-Yeh/docker-ansible/blob/master/ubuntu18.04-onbuild/Dockerfile
-FROM debian:buster
+FROM debian:bullseye
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8

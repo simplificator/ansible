@@ -1,7 +1,7 @@
 # Simplificator Ansible
 This image let's you run ansible commands in a container.
 
-## Alpine vs. Debian10 Windows Deploy vs. the other images
+## Alpine vs. Debian 11 Windows Deploy vs. the other images
 Use the alpine-based image for your continous integration. It is the slimmest of all the images (~260 MB).
 
 For deploys against a windows system, the windows-deploy tag is your choice. It contains the pywinrm libraries for the connection to WinRM.
@@ -9,7 +9,7 @@ For deploys against a windows system, the windows-deploy tag is your choice. It 
 The Debian- und Ubuntu-based Images contain additional dependencies like `libapt-pkg-dev` to test playbooks in the containers. Use them in a Dockerfile like this:
 
 ~~~~Dockerfile
-FROM simplificator/ansible:debian10
+FROM simplificator/ansible:debian11
 
 ADD ./roles /etc/ansible/roles
 

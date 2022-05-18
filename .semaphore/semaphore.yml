@@ -30,7 +30,7 @@ blocks:
       - name: Build, Test and Push Image
         matrix:
           - env_var: DISTRIBUTION_VERSION
-            values: ["alpine3", "debian10-windows-deploy" ]
+            values: ["alpine3", "debian11-windows-deploy" ]
         commands:
           - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG || true
           - docker build
@@ -83,7 +83,7 @@ blocks:
         - name: Tag master image as stable
           matrix:
             - env_var: DISTRIBUTION_VERSION
-              values: ["debian10-windows-deploy", "debian11", "ubuntu2004", "ubuntu2204", "alpine3" ]
+              values: ["debian11-windows-deploy", "debian11", "ubuntu2004", "ubuntu2204", "alpine3" ]
           commands:
             - docker pull $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG
             - docker image tag $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$DISTRIBUTION_VERSION
@@ -105,7 +105,7 @@ blocks:
             - docker image tag $DOCKER_REPOSITORY:alpine3-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
             - docker push $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
 
-  - name: "Tag debian10-windows-deploy as windows-deploy for feature branch"
+  - name: "Tag debian11-windows-deploy as windows-deploy for feature branch"
     dependencies:
       - "Build, Test and Push minimal images"
     run:
@@ -115,10 +115,10 @@ blocks:
       env_vars: *minimal_env_vars
       secrets: *secrets
       jobs:
-        - name: Tag debian10 windows deploy image as windows-deploy
+        - name: Tag debian11-windows-deploy image as windows-deploy
           commands:
-            - docker pull $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG
-            - docker image tag $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG-windows-deploy
+            - docker pull $DOCKER_REPOSITORY:debian11-windows-deploy-$CI_COMMIT_REF_SLUG
+            - docker image tag $DOCKER_REPOSITORY:debian11-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG-windows-deploy
             - docker push $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG-windows-deploy
 
   - name: "Tag alpine image as latest if master"
@@ -137,7 +137,7 @@ blocks:
             - docker image tag $DOCKER_REPOSITORY:alpine3-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:latest
             - docker push $DOCKER_REPOSITORY:latest
 
-  - name: "Tag debian10-windows-deploy as windows-deploy if master"
+  - name: "Tag debian11-windows-deploy as windows-deploy if master"
     dependencies:
       - "Build, Test and Push minimal images"
     run:
@@ -149,6 +149,6 @@ blocks:
       jobs:
         - name: Tag debian10 windows deploy image as windows-deploy
           commands:
-            - docker pull $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG
-            - docker image tag $DOCKER_REPOSITORY:debian10-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:windows-deploy
+            - docker pull $DOCKER_REPOSITORY:debian11-windows-deploy-$CI_COMMIT_REF_SLUG
+            - docker image tag $DOCKER_REPOSITORY:debian11-windows-deploy-$CI_COMMIT_REF_SLUG $DOCKER_REPOSITORY:windows-deploy
             - docker push $DOCKER_REPOSITORY:windows-deploy
