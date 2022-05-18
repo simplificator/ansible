@@ -1,6 +1,9 @@
 # SOURCE: https://github.com/William-Yeh/docker-ansible/blob/master/alpine3-onbuild/Dockerfile
 FROM python:3.9-alpine
 
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 ARG ANSIBLE_VERSION
 
 RUN echo "===> Adding Ansible dependencies..."  && \
