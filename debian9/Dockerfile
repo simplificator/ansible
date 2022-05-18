@@ -1,6 +1,9 @@
 # SOURCE: https://github.com/William-Yeh/docker-ansible/blob/master/ubuntu18.04-onbuild/Dockerfile
 FROM debian:stretch
 
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 ARG ANSIBLE_VERSION
 
 RUN echo "===> Installing dev libraries and supporting tools ..."  && \
