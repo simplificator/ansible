@@ -9,7 +9,7 @@ ARG ANSIBLE_VERSION
 RUN echo "===> Adding Ansible dependencies..."  && \
 	apk --update add git bash openssh-client && \
     apk --update add --virtual build-dependencies libffi-dev openssl-dev build-base wget && \
-    pip install --upgrade "cryptography<3.4" pip pycrypto cffi jmespath nodeping-api && \
+    pip install --upgrade cryptography pip pycrypto cffi jmespath nodeping-api && \
     \
     echo "===> Installing Ansible..."  && \
     pip install ansible==$ANSIBLE_VERSION && \
