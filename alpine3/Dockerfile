@@ -7,7 +7,7 @@ ENV LC_ALL C.UTF-8
 ARG ANSIBLE_VERSION
 
 RUN echo "===> Adding Ansible dependencies..."  && \
-	apk --update add git bash openssh-client && \
+	apk --update add git bash openssh-client curl && \
     apk --update add --virtual build-dependencies libffi-dev openssl-dev build-base wget && \
     pip install --upgrade cryptography pip pycrypto cffi jmespath nodeping-api && \
     \
